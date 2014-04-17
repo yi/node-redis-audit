@@ -1,7 +1,7 @@
 {
   "name": "redis-audit",
   "description": "a redis-backed audit log module for NodeJS",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://github.com/yi/node-redis-audit",
   "author": {
     "name": "Yi",
@@ -39,5 +39,5 @@
     "mocha": ">=1.3.2",
     "should": ">=1.1.0"
   },
-  "keywords": []
+  "keywords": ["redis", "audit", "log"]
 }
