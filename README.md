@@ -1,4 +1,8 @@
-# redis-audit [![Build Status](https://secure.travis-ci.org/yi/node-redis-audit.png?branch=master)](http://travis-ci.org/yi/node-redis-audit)
+# redis-audit
+[![Build Status](https://travis-ci.org/yi/node-redis-audit.png?branch=master)](https://travis-ci.org/yi/node-redis-audit)
+[![Dependencies Status](https://david-dm.org/yi/node-redis-audit.png)](https://david-dm.org/yi/node-redis-audit)
+
+
 
 a redis-backed audit log module for NodeJS
 
