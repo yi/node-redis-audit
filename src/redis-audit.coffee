@@ -19,7 +19,7 @@ DEFAULT_OPTIONS =
   delimiter : "\t"
 
 
-Class RedisAudit
+class RedisAudit
 
   constructor: (options={}) ->
     @options = _.extend {}, DEFAULT_OPTIONS, options
@@ -32,16 +32,33 @@ Class RedisAudit
 
   add : (key, info...)->
     assert key, "missing key"
-    return unless info.length > 0
+
+    callback = info.pop() if _.isFunction(_.last(info))
+    unless info.length > 0
+      callback() if callback?
+      return
+
     key = "#{@options.prefix}:#{key}"
-    @redisClient.RPUSH key , info.join(@options.delimiter), (err, length)->
-      return debuglog "[add] ERROR: when RPUSH. error: #{err}" if err?
+    @redisClient.RPUSH key , info.join(@options.delimiter), (err, length)=>
+      if err?
+        debuglog "[add] ERROR: when RPUSH. error: #{err}"
+        callback err if err?
+        return
+
       if length > @options.maxLogLength
         @redisClient.LTRIM key 0, @options.maxLogLength - 1, (err)->
           debuglog "[add] ERROR: when LTRIM. error: #{err}" if err?
+          callback err if callback?
           return
+      else
+        callback() if callback?
       return
     return
+
+  clear : (key, callback)->
+    assert key, "missing key"
+    key = "#{@options.prefix}:#{key}"
+    @redisClient.DEL key, callback
 
 
   list : (key, from, to, callback)->
@@ -58,7 +75,7 @@ Class RedisAudit
         debuglog "[list] ERROR: when LRANGE. error: #{err}"
         callback err
         return
-      callback null, items.map(@deserialize)
+      callback null, items.map((val)=> val.split(@options.delimiter))
       return
     return
 
@@ -69,10 +86,18 @@ Class RedisAudit
       return
     return
 
+  count : (key, callback)->
+    assert key, "missing key"
+    assert _.isFunction(callback), "missing callback"
+    key = "#{@options.prefix}:#{key}"
+    @redisClient.LLEN key, callback
+    return
+
   latest : (key, count, callback)->
     assert key, "missing key"
+    assert _.isFunction(callback), "missing callback"
     count = parseInt(count, 10) || 0
-    return [] if count < 1
+    return callback(null, []) if count < 1
 
     key = "#{@options.prefix}:#{key}"
     @redisClient.LRANGE key, -count, -1, (err, items)=>
@@ -81,12 +106,8 @@ Class RedisAudit
         callback err
         return
 
-      callback null, items.reverse().map(@deserialize)
+      callback null, items.reverse().map((val)=> val.split(@options.delimiter))
     return
-
-  deserialize : (val)-> val.split(@options.delimiter)
-
-
 
 module.exports=RedisAudit
 
