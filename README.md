@@ -11,15 +11,39 @@ npm install redis-audit
 
 ## Usage
 ```javascript
-var redis_audit = require('redis-audit');
+var RedisAudit = require('redis-audit');
+audit = new RedisAudit;
+audit.add(KEY, 1, "abc");
+audit.add(KEY, 2, "efg");
+audit.add(KEY, 3, "hij");
+audit.add(KEY, 4, "klm");
+audit.add(KEY, 5, "nop");
+audit.list(KEY, 0, 3, function(err, items) {
+    // items:
+    // [
+    //   ["1", "abc"]
+    //   ["2", "efg"]
+    //   ["3", "hij"]
+    // ]
+});
+
+audit.latest(KEY, 2, function(err, items) {
+    // items:
+    // [
+    //   ["5", "nop"]
+    //   ["4", "klm"]
+    // ]
+});
+
 ```
-_(Coming soon)_
 
-## Examples
-_(Coming soon)_
+## Options
+ * maxLogLength : 9999
+ * redisHost : "localhost"
+ * redisPort : "6379"
+ * prefix : "raudit"
+ * delimiter : "\t"
 
-## Contributing
-In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## License
 Copyright (c) 2014 Yi

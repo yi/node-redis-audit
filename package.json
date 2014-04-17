@@ -1,7 +1,7 @@
 {
   "name": "redis-audit",
   "description": "a redis-backed audit log module for NodeJS",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/yi/node-redis-audit",
   "author": {
     "name": "Yi",
