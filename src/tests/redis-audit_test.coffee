@@ -23,7 +23,7 @@ describe "RedisAudit", ()->
 
 
   describe "add", ()->
-    #afterEach (done)-> audit.clear KEY, done
+    afterEach (done)-> audit.clear KEY, done
 
     it "should work", (done)->
       audit.add KEY, 1, "abc", (err)->
