@@ -46,7 +46,8 @@ class RedisAudit
         return
 
       if length > @options.maxLogLength
-        @redisClient.LTRIM key 0, @options.maxLogLength - 1, (err)->
+        #@redisClient.LTRIM key, 0, @options.maxLogLength - 1, (err)->
+        @redisClient.LTRIM key, -1, 0-@options.maxLogLength, (err)->
           debuglog "[add] ERROR: when LTRIM. error: #{err}" if err?
           callback err if callback?
           return

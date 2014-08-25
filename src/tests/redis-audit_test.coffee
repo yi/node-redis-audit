@@ -5,7 +5,7 @@ RedisAudit = require "../redis-audit"
 
 KEY = "test"
 
-audit = new RedisAudit
+audit = new RedisAudit({maxLogLength:10})
 
 describe "RedisAudit", ()->
 
@@ -23,7 +23,7 @@ describe "RedisAudit", ()->
 
 
   describe "add", ()->
-    afterEach (done)-> audit.clear KEY, done
+    #afterEach (done)-> audit.clear KEY, done
 
     it "should work", (done)->
       audit.add KEY, 1, "abc", (err)->
