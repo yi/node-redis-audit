@@ -37,7 +37,6 @@ class RedisAudit
     unless info.length > 0
       callback() if callback?
       return
-
     key = "#{@options.prefix}:#{key}"
     @redisClient.RPUSH key , info.join(@options.delimiter), (err, length)=>
       if err?
@@ -70,7 +69,7 @@ class RedisAudit
 
     [from, to] = [to, from] if from > to
     key = "#{@options.prefix}:#{key}"
-
+    console.log "from: #{from} to : #{to}"
     @redisClient.LRANGE key, from, to, (err, items)=>
       if err?
         debuglog "[list] ERROR: when LRANGE. error: #{err}"
@@ -81,6 +80,8 @@ class RedisAudit
     return
 
   rlist : (key, from, to, callback)->
+    from = 0 - from - 1 if from >= 0
+    to = 0 - to - 1 if to >= 0
     @list key, to, from, (err, items)->
       items.reverse() if Array.isArray(items)
       callback err, items

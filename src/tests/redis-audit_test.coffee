@@ -54,6 +54,7 @@ describe "RedisAudit", ()->
               audit.add KEY, 5, "nop", (err)->
                 audit.list KEY, 0, 3, (err, items)->
                   should.not.exist err
+                  console.dir items
                   Array.isArray(items).should.be.ok
                   items.length.should.eql 4
                   items[0][0].should.eql "1"
@@ -70,12 +71,13 @@ describe "RedisAudit", ()->
               audit.add KEY, 5, "nop", (err)->
                 audit.rlist KEY, 0, 3, (err, items)->
                   should.not.exist err
+                  console.dir items
                   Array.isArray(items).should.be.ok
                   items.length.should.eql 4
-                  items[0][0].should.eql "4"
-                  items[1][0].should.eql "3"
-                  items[2][0].should.eql "2"
-                  items[3][0].should.eql "1"
+                  items[0][0].should.eql "5"
+                  items[1][0].should.eql "4"
+                  items[2][0].should.eql "3"
+                  items[3][0].should.eql "2"
                   audit.count KEY, (err, count)->
                     should.not.exist err
                     count.should.eql 5
