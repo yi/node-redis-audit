@@ -64,7 +64,11 @@ describe "RedisAudit", ()->
         done()
 
 
-
+    it "pull latest", (done) ->
+      audit.latest KEY, 100, (err, items)->
+        should.not.exist err
+        console.dir items
+        done()
 
 
 
