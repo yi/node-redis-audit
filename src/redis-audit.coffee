@@ -80,8 +80,8 @@ class RedisAudit
     return
 
   rlist : (key, from, to, callback)->
-    from = 0 - from - 1 if from >= 0
-    to = 0 - to - 1 if to >= 0
+    #from = 0 - from - 1 if from >= 0
+    #to = 0 - to - 1 if to >= 0
     @list key, to, from, (err, items)->
       items.reverse() if Array.isArray(items)
       callback err, items
