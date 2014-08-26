@@ -5,7 +5,7 @@ RedisAudit = require "../redis-audit"
 
 KEY = "test"
 
-audit = new RedisAudit
+audit = new RedisAudit({maxLogLength:10})
 
 describe "RedisAudit", ()->
 
