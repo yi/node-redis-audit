@@ -32,22 +32,19 @@ class RedisAudit
 
   add : (key, info...)->
     assert key, "missing key"
-
     callback = info.pop() if _.isFunction(_.last(info))
     unless info.length > 0
       callback() if callback?
       return
-
     key = "#{@options.prefix}:#{key}"
     @redisClient.RPUSH key , info.join(@options.delimiter), (err, length)=>
       if err?
         debuglog "[add] ERROR: when RPUSH. error: #{err}"
         callback err if err?
         return
-
       if length > @options.maxLogLength
         #@redisClient.LTRIM key, 0, @options.maxLogLength - 1, (err)->
-        @redisClient.LTRIM key, -1, 0-@options.maxLogLength, (err)->
+        @redisClient.LTRIM key, 0-@options.maxLogLength, -1, (err)->
           debuglog "[add] ERROR: when LTRIM. error: #{err}" if err?
           callback err if callback?
           return
@@ -70,7 +67,7 @@ class RedisAudit
 
     [from, to] = [to, from] if from > to
     key = "#{@options.prefix}:#{key}"
-
+    console.log "from: #{from} to : #{to}"
     @redisClient.LRANGE key, from, to, (err, items)=>
       if err?
         debuglog "[list] ERROR: when LRANGE. error: #{err}"
@@ -81,6 +78,8 @@ class RedisAudit
     return
 
   rlist : (key, from, to, callback)->
+    #from = 0 - from - 1 if from >= 0
+    #to = 0 - to - 1 if to >= 0
     @list key, to, from, (err, items)->
       items.reverse() if Array.isArray(items)
       callback err, items
