@@ -32,7 +32,6 @@ class RedisAudit
 
   add : (key, info...)->
     assert key, "missing key"
-
     callback = info.pop() if _.isFunction(_.last(info))
     unless info.length > 0
       callback() if callback?
@@ -43,10 +42,9 @@ class RedisAudit
         debuglog "[add] ERROR: when RPUSH. error: #{err}"
         callback err if err?
         return
-
       if length > @options.maxLogLength
         #@redisClient.LTRIM key, 0, @options.maxLogLength - 1, (err)->
-        @redisClient.LTRIM key, -1, 0-@options.maxLogLength, (err)->
+        @redisClient.LTRIM key, 0-@options.maxLogLength, -1, (err)->
           debuglog "[add] ERROR: when LTRIM. error: #{err}" if err?
           callback err if callback?
           return
